@@ -117,7 +117,7 @@ const Home = () => {
             </span>
           ) : (
             <button
-              className="btn btn-danger"
+              className="btn btn-outline-danger"
               onClick={() => window.location.reload()}
             >
               <span
