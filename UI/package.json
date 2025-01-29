@@ -1,5 +1,5 @@
 {
-  "name": "user-ui",
+  "name": "ui",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,11 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "ethereumjs-util": "^6.2.1",
-    "ethers": "^6.13.5",
+    "bootstrap": "^5.3.3",
+    "ethers": "^5.7.2",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^7.1.3"
+    "react-bootstrap": "^2.10.8",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
