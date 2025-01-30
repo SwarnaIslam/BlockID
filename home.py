@@ -8,6 +8,8 @@ import numpy as np
 from web3 import Web3
 from abi.BlockID import blockABI
 from abi.BlockTRX import blockTRX
+import os
+import json
 
 PINATA_API_KEY = st.secrets["pinata"]["api_key"]
 PINATA_SECRET_API_KEY = st.secrets["pinata"]["secret_key"]
@@ -49,10 +51,22 @@ def get_metadata_from_ipfs(cid: str):
     response = requests.get(url)
     response.raise_for_status()
     return response.json()
+NONCE_FILE_PATH = "nonce.json"
 
+def get_last_nonce():
+    if os.path.exists(NONCE_FILE_PATH):
+        with open(NONCE_FILE_PATH, "r") as f:
+            data = json.load(f)
+            return data.get("last_nonce", 0)  
+    else:
+        return 0 
+
+def update_nonce(new_nonce):
+    with open(NONCE_FILE_PATH, "w") as f:
+        json.dump({"last_nonce": new_nonce}, f)
 def set_cid_to_address(cid: str):
     try:
-        latest_nonce = id_w3.eth.get_transaction_count(sp_public_address)+1
+        latest_nonce = get_last_nonce() + 1
         txn = trx_contract.functions.setCidToAddress(public_address, cid).build_transaction({
             'from': sp_public_address,
             'nonce': latest_nonce,
@@ -65,7 +79,17 @@ def set_cid_to_address(cid: str):
         tx_hash = trx_w3.eth.send_raw_transaction(signed_txn.raw_transaction)  
 
         tx_receipt = trx_w3.eth.wait_for_transaction_receipt(tx_hash)
-        st.write(tx_receipt)
+        tx_info = {
+            'Transaction Hash': tx_receipt['transactionHash'].hex(),
+            'Block Number': tx_receipt['blockNumber'],
+            'Status': 'Success' if tx_receipt['status'] == 1 else 'Failure',
+            'Gas Used': tx_receipt['gasUsed'],
+            'Effective Gas Price': tx_receipt['effectiveGasPrice'],
+            'From': tx_receipt['from'],
+            'To': tx_receipt['to']
+        }
+        st.write(tx_info)
+        update_nonce(latest_nonce)
         return tx_receipt
     except Exception as e:
         st.error(f"Transaction Error: {e}")
@@ -115,10 +139,11 @@ if st.button("Process and Upload"):
             write_data(distance_file_path, encrypted_distance_data)
 
             distance_cid = upload_file_to_pinata(distance_file_path)
+            # distance_cid="QmfL2dY1aNmMztxzRFJuzWfYkXALgrKHJUyjcAsagT3HFd"
 
             set_cid_to_address(distance_cid)
 
-            destination_url = f"http://localhost:8503/?cid={distance_cid}&public_address={public_address}"
+            destination_url = f"http://localhost:8501/?cid={distance_cid}&public_address={public_address}"
             st.markdown(f"[Go to the next page to submit confidential info]( {destination_url} )", unsafe_allow_html=True)
 
 
