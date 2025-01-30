@@ -37,11 +37,28 @@ def decrypt_fhe_private_key(encrypted_private_key: bytes, password: str) -> byte
 def decode_base64(data: bytes) -> bytes:
     return base64.b64decode(data)
 
+import json
+import os
+
+# Path to the JSON file storing the last nonce
+NONCE_FILE_PATH = "nonce.json"
+
+def get_last_nonce():
+    if os.path.exists(NONCE_FILE_PATH):
+        with open(NONCE_FILE_PATH, "r") as f:
+            data = json.load(f)
+            return data.get("last_nonce", 0)  
+    else:
+        return 0  
+
+def update_nonce(new_nonce):
+    with open(NONCE_FILE_PATH, "w") as f:
+        json.dump({"last_nonce": new_nonce}, f)
+
 def set_cid_to_result(public_key: str, private_key: str, result: str):
     try:
-        latest_nonce = id_w3.eth.get_transaction_count(public_key)+1
-
-
+        latest_nonce = get_last_nonce() + 1
+        
         txn = trx_contract.functions.setCidToResult(cid, result).build_transaction({
             'from': public_key,
             'nonce': latest_nonce,
@@ -54,7 +71,19 @@ def set_cid_to_result(public_key: str, private_key: str, result: str):
         tx_hash = trx_w3.eth.send_raw_transaction(signed_txn.raw_transaction)
 
         tx_receipt = trx_w3.eth.wait_for_transaction_receipt(tx_hash)
-        st.write(tx_receipt)
+        tx_info = {
+            'Transaction Hash': tx_receipt['transactionHash'].hex(),
+            'Block Number': tx_receipt['blockNumber'],
+            'Status': 'Success' if tx_receipt['status'] == 1 else 'Failure',
+            'Gas Used': tx_receipt['gasUsed'],
+            'Effective Gas Price': tx_receipt['effectiveGasPrice'],
+            'From': tx_receipt['from'],
+            'To': tx_receipt['to']
+        }
+        st.write(tx_info)
+
+        update_nonce(latest_nonce)
+
         return tx_receipt
 
     except Exception as e:
@@ -90,6 +119,11 @@ if cid and public_address and password and private_address:
             encrypted_vector = ts.lazy_ckks_vector_from(decode_base64(encrypted_distance_data))
             encrypted_vector.link_context(context)
             result = encrypted_vector.decrypt()[0]
+            st.write(result)
+            if result <= 15:
+                st.success("Verified")
+            else:
+                st.warning("Not Verified")
 
             set_cid_to_result(public_address, private_address, str(result))
         except Exception as e:
