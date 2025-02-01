@@ -143,7 +143,7 @@ if st.button("Process and Upload"):
 
             set_cid_to_address(distance_cid)
 
-            destination_url = f"http://localhost:8501/?cid={distance_cid}&public_address={public_address}"
+            destination_url = f"http://localhost:8503/?cid={distance_cid}&public_address={public_address}"
             st.markdown(f"[Go to the next page to submit confidential info]( {destination_url} )", unsafe_allow_html=True)
 
 
