@@ -104,7 +104,7 @@ const Home = () => {
       {account && userId && (
         <>
           <iframe
-            src={`http://localhost:8501/?public_address=${account}&userId=${userId}`}
+            src={`http://localhost:8504/?public_address=${account}&userId=${userId}`}
             style={{ width: "100vw", height: "100vh", border: "none" }}
             title="User Dashboard"
           ></iframe>
