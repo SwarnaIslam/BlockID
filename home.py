@@ -119,7 +119,7 @@ if cid and public_address and password and private_address:
             encrypted_vector = ts.lazy_ckks_vector_from(decode_base64(encrypted_distance_data))
             encrypted_vector.link_context(context)
             result = encrypted_vector.decrypt()[0]
-            st.write(result)
+            # st.write(result)
             if result <= 15:
                 st.success("Verified")
             else:
