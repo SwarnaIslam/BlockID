@@ -18,7 +18,7 @@ It ensures **secure data storage** (via **IPFS**), **privacy** (**Fully Homomorp
 
 ## **1️⃣ Cloning the Project**
 ```bash
-git clone -b subnet https://github.com/your-repo/blockid.git
+git clone -b subnet https://github.com/SwarnaIslam/blockid.git
 cd blockid
 ```
 
@@ -96,11 +96,12 @@ Copy the contract **addresses** and **ABIs**.
 ---
 
 ## **5️⃣ Set Up the UI**
-Clone the UI repository:
+Clone the Identity Manager's UI repository:
 ```bash
-git clone -b main https://github.com/your-repo/blockid-ui.git
+git clone -b main https://github.com/SwarnaIslam/blockid.git
 cd blockid-ui
 ```
+Go inside UI folder.
 Create an `.env` file:
 ```ini
 VITE_CONTRACT_ADDRESS=contract_address_of_BlockID
@@ -116,12 +117,8 @@ npm run dev
 
 ---
 
-## **6️⃣ Set Up Backend Utilities**
-Clone the backend utilities repository:
-```bash
-git clone -b utils https://github.com/your-repo/blockid-utils.git
-cd blockid-utils
-```
+## **6️⃣ Set Up Streamlit Utilities**
+Go inside utilities folder.
 Create a `.streamlit/secrets.toml` file:
 ```ini
 [pinata]
@@ -132,7 +129,7 @@ Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
-Run the backend:
+Run the application:
 ```bash
 streamlit run home.py
 ```
@@ -142,7 +139,7 @@ streamlit run home.py
 ## **7️⃣ Additional Modules**
 ### **➡️ SP_UI (Service Provider Verification)**
 ```bash
-git clone -b SP_UI https://github.com/your-repo/sp-ui.git
+git clone -b SP_UI https://github.com/SwarnaIslam/blockid.git
 cd sp-ui
 ```
 Create `.streamlit/secrets.toml`:
@@ -169,7 +166,7 @@ streamlit run home.py
 
 ### **➡️ V_UI (Verification Interface)**
 ```bash
-git clone -b V_UI https://github.com/your-repo/v-ui.git
+git clone -b V_UI https://github.com/SwarnaIslam/blockid.git
 cd v-ui
 ```
 Create `.streamlit/secrets.toml`:
@@ -195,7 +192,7 @@ streamlit run home.py
 
 ### **➡️ User_UI (User Dashboard)**
 ```bash
-git clone -b User_UI https://github.com/your-repo/user-ui.git
+git clone -b User_UI https://github.com/SwarnaIslam/blockid.git
 cd user-ui
 ```
 Create an `.env` file:
@@ -218,9 +215,9 @@ Ensure the following are running:
 ✅ **Avalanche Subnets (BlockID & BlockTRX)**  
 ✅ **Smart Contracts Deployed**  
 ✅ **UI Interfaces (User, SP, Verification)**  
-✅ **Backend Services (IPFS, Streamlit, Pinata)**  
+✅ **Backend Services (IPFS, Pinata)**  
 
-You can now interact with **BlockID** using the User Dashboard and Service Provider Verification.
+You can now interact with **BlockID** using Identity Manager dashboard, the User dashboard and Service Provider Verification.
 
 ---
 
